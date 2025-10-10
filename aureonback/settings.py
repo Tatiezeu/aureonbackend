@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'email_verification',
     'phone_verification',
     'corsheaders',
+    'password_reset',
 ]
 
 MIDDLEWARE = [
