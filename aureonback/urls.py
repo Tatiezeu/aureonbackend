@@ -9,6 +9,7 @@ urlpatterns = [
     path("password-reset/", include("password_reset.urls")),
     path("phone-verification/", include("phone_verification.urls")),
     path('api/auth/', include('accounts.urls', namespace="accounts")),
+     path('api/reports/', include('reports.urls')),
 ]
 
 if settings.DEBUG:
