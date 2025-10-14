@@ -14,12 +14,15 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 
 class ReportSerializer(serializers.ModelSerializer):
-    # Map backend fields to frontend-friendly names
-    hebergement = serializers.SerializerMethodField()
-    bar = serializers.SerializerMethodField()
-    cuisine = serializers.SerializerMethodField()
+    # Writable fields mapping to model
+    hebergement = serializers.DecimalField(source='montant_hebergement', max_digits=12, decimal_places=2)
+    bar = serializers.DecimalField(source='montant_bar', max_digits=12, decimal_places=2)
+    cuisine = serializers.DecimalField(source='montant_cuisine', max_digits=12, decimal_places=2)
 
+    # Nested expenses
     expenses = ExpenseSerializer(many=True, required=False)
+
+    # Computed fields
     total_amount = serializers.SerializerMethodField()
     total_expenses = serializers.SerializerMethodField()
     reste_en_caisse = serializers.SerializerMethodField()
@@ -35,17 +38,8 @@ class ReportSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_at', 'updated_at', 'total_amount', 'total_expenses', 'reste_en_caisse']
 
     # -----------------------------
-    # Field getters
+    # Computed field getters
     # -----------------------------
-    def get_hebergement(self, obj):
-        return obj.montant_hebergement or 0
-
-    def get_bar(self, obj):
-        return obj.montant_bar or 0
-
-    def get_cuisine(self, obj):
-        return obj.montant_cuisine or 0
-
     def get_total_amount(self, obj):
         return (obj.montant_hebergement or 0) + (obj.montant_bar or 0) + (obj.montant_cuisine or 0)
 
@@ -56,7 +50,7 @@ class ReportSerializer(serializers.ModelSerializer):
         return self.get_total_amount(obj) - self.get_total_expenses(obj)
 
     # -----------------------------
-    # Create / Update
+    # Create / Update with nested expenses
     # -----------------------------
     def create(self, validated_data):
         expenses_data = validated_data.pop('expenses', [])
