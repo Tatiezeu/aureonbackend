@@ -9,7 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+from dotenv import load_dotenv
+load_dotenv()
 
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -51,6 +55,9 @@ INSTALLED_APPS = [
     'password_reset',
     'reports',
     'profiles',
+    'chat',
+    'switch_requests',
+    
 ]
 
 MIDDLEWARE = [
@@ -180,7 +187,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = "tatiezeub@gmail.com"        # Your Gmail
-EMAIL_HOST_PASSWORD = "zzip sygk trrh puyp"    # Your generated App Password
+EMAIL_HOST_PASSWORD = "fnpi qora ymit wqht"    # Your generated App Password
 
 CACHES = {
     "default": {

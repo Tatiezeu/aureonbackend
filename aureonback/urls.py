@@ -11,6 +11,8 @@ urlpatterns = [
     path('api/auth/', include('accounts.urls', namespace="accounts")),
     path('api/', include('reports.urls')),
     path('api/profiles/', include('profiles.urls')),
+    path('api/switch-requests/', include('switch_requests.urls')),
+    path('api/chat/', include('chat.urls')),   
 ]
 
 if settings.DEBUG:

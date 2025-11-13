@@ -25,7 +25,7 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'phone', 'role', 'status', 'profile_picture']
+        fields = ['id', 'username', 'email', 'phone', 'role', 'status', 'profile_picture','is_active']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -35,7 +35,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password', 'phone', 'role', 'status', 'profile_picture']
 
     def create(self, validated_data):
-        return User.objects.create_user(
+        # Pop profile_picture if it exists
+        profile_picture = validated_data.pop('profile_picture', None)
+
+        # Create user with remaining fields
+        user = User.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
             username=validated_data.get('username', ''),
@@ -43,3 +47,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             role=validated_data.get('role', 'accountant'),
             status=validated_data.get('status', 'active'),
         )
+
+        # Assign profile picture if provided
+        if profile_picture:
+            user.profile_picture = profile_picture
+            user.save()
+
+        return user
